@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="canvas" class="mx-auto bg-white" width="200" height="200"></canvas>
+  <canvas ref="canvas" class="mx-auto bg-gray-900" width="200" height="200"></canvas>
 </template>
 
 <script>
@@ -12,10 +12,9 @@ export default {
 
     const drawGallows = () => {
       const ctx = canvas.value.getContext('2d');
-      ctx.fillStyle = 'green';
       ctx.beginPath();
-      ctx.lineWidth = '2';
-      ctx.strokeStyle = 'black';
+      ctx.lineWidth = '4';
+      ctx.strokeStyle = 'white';
 
       // gallows
       ctx.moveTo(10, 200 - 10);
@@ -65,7 +64,6 @@ export default {
     onMounted(drawGallows);
     onBeforeUpdate(drawGallows);
 
-    // console.log(ctx);
     return {
       canvas,
     };
