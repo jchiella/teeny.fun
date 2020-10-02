@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-center text-blue-600 text-4xl font-bold">{{ msg }}</h1>
+    <h1 class="text-center text-4xl font-bold">{{ msg }}</h1>
   </div>
 </template>
 
@@ -12,6 +12,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>
