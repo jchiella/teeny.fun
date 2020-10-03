@@ -1,11 +1,20 @@
 <template>
-  <div>
+  <div ref="outerDiv">
     <h1 class="text-center text-4xl font-bold mb-5">Hangman</h1>
     <HangmanGallows :state="gallowsState" />
     <HangmanWord :class="wordColor" :word="guessedWord" />
     <HangmanGuesses :guesses="wrongGuesses" />
     <HangmanStatus :status="gameStatus" />
-    <div class="flex items-center">
+    <div class="flex flex-col items-center">
+      <input
+        v-if="onMobile"
+        ref="mobileInput"
+        @input="propagateKey"
+        type="text"
+        placeholder="Tap here for your keyboard!"
+        style="caret-color: transparent"
+        class="bg-gray-900 outline-none"
+      />
       <button
         id="play-again-btn"
         class="px-2 py-1 mt-2 mx-auto bg-white text-blue-900 font-bold flex-4 text-center text-lg"
@@ -25,7 +34,9 @@ import HangmanStatus from '@/components/HangmanStatus.vue';
 
 import words from '@/assets/words.json';
 
-import { ref, onMounted, onUnmounted } from 'vue';
+import {
+  ref, computed, onMounted, onUnmounted,
+} from 'vue';
 
 function getHangmanWord() {
   return words[Math.floor(Math.random() * words.length)];
@@ -38,6 +49,9 @@ export default {
     const wrongGuesses = ref([]);
     const gameStatus = ref('normal');
     const wordColor = ref('text-white');
+    const outerDiv = ref(null);
+    const mobileInput = ref(null);
+    const onMobile = computed(() => (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1));
 
     let hiddenWord = getHangmanWord();
 
@@ -101,6 +115,15 @@ export default {
       }
     };
 
+    const propagateKey = (event) => {
+      const newEvent = new KeyboardEvent('keydown', {
+        key: event.data,
+        bubbles: true,
+      });
+      mobileInput.value.value = '';
+      guessLetter(newEvent);
+    };
+
     onMounted(() => window.addEventListener('keypress', guessLetter));
     onUnmounted(() => window.removeEventListener('keypress', guessLetter));
 
@@ -116,6 +139,10 @@ export default {
       gameStatus,
       resetGame,
       wordColor,
+      propagateKey,
+      outerDiv,
+      mobileInput,
+      onMobile,
     };
   },
   name: 'Hangman',
