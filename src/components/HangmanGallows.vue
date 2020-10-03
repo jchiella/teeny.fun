@@ -16,8 +16,11 @@ export default {
       ctx.lineWidth = '4';
       ctx.strokeStyle = 'white';
 
+      ctx.moveTo(0, 200 - 2);
+      ctx.lineTo(30, 200 - 2);
+
       // gallows
-      ctx.moveTo(10, 200 - 10);
+      ctx.moveTo(10, 200);
       ctx.lineTo(10, 10);
       ctx.lineTo(100, 10);
       ctx.lineTo(100, 30);

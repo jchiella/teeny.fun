@@ -2,8 +2,18 @@
   <div>
     <h1 class="text-center text-4xl font-bold mb-5">Hangman</h1>
     <HangmanGallows :state="gallowsState" />
-    <HangmanWord :word="guessedWord" />
+    <HangmanWord :class="wordColor" :word="guessedWord" />
     <HangmanGuesses :guesses="wrongGuesses" />
+    <HangmanStatus :status="gameStatus" />
+    <div class="flex items-center">
+      <button
+        id="play-again-btn"
+        class="px-2 py-1 mt-2 mx-auto bg-white text-blue-900 font-bold flex-4 text-center text-lg"
+        @click.prevent="resetGame"
+      >
+        {{ gameStatus !== 'normal' ? 'Play Again' : 'New Game' }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -11,6 +21,7 @@
 import HangmanGallows from '@/components/HangmanGallows.vue';
 import HangmanWord from '@/components/HangmanWord.vue';
 import HangmanGuesses from '@/components/HangmanGuesses.vue';
+import HangmanStatus from '@/components/HangmanStatus.vue';
 
 import words from '@/assets/words.json';
 
@@ -25,29 +36,50 @@ export default {
     const gallowsState = ref(0);
     const guessedWord = ref('');
     const wrongGuesses = ref([]);
+    const gameStatus = ref('normal');
+    const wordColor = ref('text-white');
 
-    const hiddenWord = getHangmanWord();
+    let hiddenWord = getHangmanWord();
 
     guessedWord.value = '_'.repeat(hiddenWord.length);
 
-    console.log(hiddenWord);
-
     const gameWon = () => {
-      console.log('WON');
+      gameStatus.value = 'won';
     };
 
     const gameLost = () => {
-      console.log('LOST');
+      gameStatus.value = 'lost';
+      guessedWord.value = hiddenWord;
+      wordColor.value = 'text-green-500';
+    };
+
+    const resetGame = () => {
+      gallowsState.value = 0;
+      guessedWord.value = '';
+      wrongGuesses.value = [];
+      gameStatus.value = 'normal';
+      hiddenWord = getHangmanWord();
+      guessedWord.value = '_'.repeat(hiddenWord.length);
+      wordColor.value = 'text-white';
     };
 
     const guessLetter = (event) => {
       const guess = event.key.toLowerCase();
-      // TODO validation on this to make sure it's a letter
+
+      if (gameStatus.value !== 'normal') return;
+      if (wrongGuesses.value.includes(guess)) return;
+      if (guessedWord.value.includes(guess)) return;
+
+      if (guess === 'enter') {
+        resetGame();
+        return;
+      }
+
+      if (/^[^a-zA-Z]$/.test(guess)) return;
 
       let matchFound = false;
 
       [...hiddenWord].forEach((letter, index) => {
-        console.log(letter, index, letter === guess);
         if (letter === guess) {
           guessedWord.value = guessedWord.value.substring(0, index) + guess
             + guessedWord.value.substring(index + 1);
@@ -81,6 +113,9 @@ export default {
       guessedWord,
       wrongGuesses,
       nextState,
+      gameStatus,
+      resetGame,
+      wordColor,
     };
   },
   name: 'Hangman',
@@ -88,6 +123,7 @@ export default {
     HangmanGallows,
     HangmanWord,
     HangmanGuesses,
+    HangmanStatus,
   },
 };
 </script>
