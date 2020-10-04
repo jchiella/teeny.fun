@@ -13,7 +13,7 @@
         type="text"
         placeholder="Tap here for your keyboard!"
         style="caret-color: transparent"
-        class="bg-gray-900 outline-none"
+        class="bg-black outline-none"
       />
       <button
         id="play-again-btn"
