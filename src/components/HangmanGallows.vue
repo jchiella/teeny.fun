@@ -1,10 +1,10 @@
 <template>
-  <canvas ref="canvas" class="mx-auto bg-gray-900" width="200" height="200"></canvas>
+  <canvas ref="canvas" class="mx-auto" width="200" height="200"></canvas>
 </template>
 
 <script>
 
-import { ref, onMounted, onBeforeUpdate } from 'vue';
+import { ref, onMounted, onUpdated } from 'vue';
 
 export default {
   setup(props) {
@@ -12,6 +12,7 @@ export default {
 
     const drawGallows = () => {
       const ctx = canvas.value.getContext('2d');
+      ctx.clearRect(0, 0, 200, 200);
       ctx.beginPath();
       ctx.lineWidth = '4';
       ctx.strokeStyle = 'white';
@@ -65,7 +66,7 @@ export default {
     };
 
     onMounted(drawGallows);
-    onBeforeUpdate(drawGallows);
+    onUpdated(drawGallows);
 
     return {
       canvas,
