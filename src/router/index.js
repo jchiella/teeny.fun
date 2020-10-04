@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import Hangman from '../views/Hangman.vue';
 import Snake from '../views/Snake.vue';
+import Void from '../views/Void.vue';
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/snake',
     name: 'Snake',
     component: Snake,
+  },
+  {
+    path: '/void',
+    name: 'Void',
+    component: Void,
   },
 ];
 
