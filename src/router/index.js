@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import Hangman from '../views/Hangman.vue';
+import Snake from '../views/Snake.vue';
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/hangman',
     name: 'Hangman',
     component: Hangman,
+  },
+  {
+    path: '/snake',
+    name: 'Snake',
+    component: Snake,
   },
 ];
 
