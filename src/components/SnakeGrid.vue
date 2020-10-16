@@ -20,8 +20,15 @@ export default {
       const ctx = canvas.value.getContext('2d');
       const { width, height } = canvas.value;
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'black';
 
+      if (props.berryCells.length) {
+        ctx.fillStyle = 'red';
+        props.berryCells.forEach(({ x, y }) => {
+          fillCell(ctx, x, y);
+        });
+      }
+
+      ctx.fillStyle = 'black';
       props.snakeCells.forEach(({ x, y }) => {
         fillCell(ctx, x, y);
       });
@@ -37,6 +44,7 @@ export default {
   name: 'SnakeGrid',
   props: {
     snakeCells: { type: Array },
+    berryCells: { type: Array },
   },
 };
 </script>
