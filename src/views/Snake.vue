@@ -54,16 +54,16 @@ export default {
     const moveSnake = (event) => {
       event.preventDefault();
       const { key } = event;
-      if (key === 'ArrowDown') {
+      if (key === 'ArrowDown' && velocity.y === 0) {
         velocity.x = 0;
         velocity.y = 1;
-      } else if (key === 'ArrowUp') {
+      } else if (key === 'ArrowUp' && velocity.y === 0) {
         velocity.x = 0;
         velocity.y = -1;
-      } else if (key === 'ArrowRight') {
+      } else if (key === 'ArrowRight' && velocity.x === 0) {
         velocity.x = 1;
         velocity.y = 0;
-      } else if (key === 'ArrowLeft') {
+      } else if (key === 'ArrowLeft' && velocity.x === 0) {
         velocity.x = -1;
         velocity.y = 0;
       }
