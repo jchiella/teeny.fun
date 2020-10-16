@@ -37,6 +37,20 @@ export default {
     const snakeLength = ref(1);
     let loopsSinceBerry = 0;
 
+    const resetGame = () => {
+      loopsSinceBerry = 0;
+      snakeLength.value = 1;
+      snakeCells.value = [{
+        x: 10,
+        y: 10,
+      }];
+      berryCells.value = [];
+      velocity.x = 1;
+      velocity.y = 0;
+      headPos.x = 10;
+      headPos.y = 10;
+    };
+
     const moveSnake = (event) => {
       event.preventDefault();
       const { key } = event;
@@ -63,6 +77,10 @@ export default {
         };
         berryCells.value = [...berryCells.value, newBerry];
       }
+    };
+
+    const gameLost = () => {
+      alert('You lost!');
     };
 
     const gameLoop = () => {
@@ -111,6 +129,13 @@ export default {
           berryCells.value.splice(idx, 1);
         });
       }
+
+      snakeCells.value.slice(1).forEach((cell) => {
+        if (snakeHead.x === cell.x && snakeHead.y === cell.y) {
+          gameLost();
+          resetGame();
+        }
+      });
     };
 
     let intervalTimer;
