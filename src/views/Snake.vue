@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1 class="text-center text-4xl font-bold mb-5">Snake (WIP)</h1>
+    <h1 class="text-center text-4xl font-bold mb-3">Snake (WIP)</h1>
+    <h2 class="text-center text-3xl font-bold text-blue-500 mb-3">{{ snakeLength }}</h2>
     <SnakeGrid :snakeCells="snakeCells" :berryCells="berryCells" />
   </div>
 </template>
@@ -29,7 +30,11 @@ export default {
       y: 10,
     };
 
-    let snakeLength = 1;
+    const maxBerries = 4;
+    const berryInterval = 12; // * gameLoopInterval
+    const gameLoopInterval = 250; // ms
+
+    const snakeLength = ref(1);
     let loopsSinceBerry = 0;
 
     const moveSnake = (event) => {
@@ -51,17 +56,19 @@ export default {
     };
 
     const addBerry = () => {
-      const newBerry = {
-        x: Math.floor(Math.random() * 21),
-        y: Math.floor(Math.random() * 21),
-      };
-      berryCells.value = [...berryCells.value, newBerry];
+      if (berryCells.value.length <= maxBerries) {
+        const newBerry = {
+          x: Math.floor(Math.random() * 21),
+          y: Math.floor(Math.random() * 21),
+        };
+        berryCells.value = [...berryCells.value, newBerry];
+      }
     };
 
     const gameLoop = () => {
       loopsSinceBerry += 1;
 
-      if (loopsSinceBerry > 12) {
+      if (loopsSinceBerry > berryInterval) {
         loopsSinceBerry = 0;
         addBerry();
       }
@@ -81,7 +88,7 @@ export default {
       }
       headPos.y += velocity.y;
 
-      if (snakeCells.value.length >= snakeLength) {
+      if (snakeCells.value.length >= snakeLength.value) {
         snakeCells.value = [...snakeCells.value.slice(1), { ...headPos }];
       } else {
         snakeCells.value = [...snakeCells.value, { ...headPos }];
@@ -94,9 +101,8 @@ export default {
 
         berryCells.value.forEach((berry, index) => {
           if (!berry) return;
-          console.log(snakeHead.x === berry.x && snakeHead.y === berry.y);
           if (snakeHead.x === berry.x && snakeHead.y === berry.y) {
-            snakeLength += 1;
+            snakeLength.value += 1;
             berryIndices.push(index);
           }
         });
@@ -111,7 +117,7 @@ export default {
 
     onMounted(() => {
       window.addEventListener('keydown', moveSnake);
-      intervalTimer = setInterval(gameLoop, 250);
+      intervalTimer = setInterval(gameLoop, gameLoopInterval);
     });
     onUnmounted(() => {
       window.removeEventListener('keydown', moveSnake);
@@ -121,6 +127,7 @@ export default {
     return {
       snakeCells,
       berryCells,
+      snakeLength,
     };
   },
   name: 'Snake',
