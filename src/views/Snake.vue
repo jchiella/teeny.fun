@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 class="text-center text-4xl font-bold mb-3">Snake (WIP)</h1>
-    <h2 class="text-center text-3xl font-bold text-blue-500 mb-3">{{ snakeLength }}</h2>
+    <h1 class="text-center text-4xl font-bold mb-3">Snake</h1>
+    <h2 class="text-center text-3xl font-bold text-blue-500 mb-3">{{ message || snakeLength }}</h2>
     <SnakeGrid :snakeCells="snakeCells" :berryCells="berryCells" />
   </div>
 </template>
@@ -13,6 +13,8 @@ import SnakeGrid from '@/components/SnakeGrid.vue';
 
 export default {
   setup() {
+    const message = ref('Welcome to Snake! Press any key to begin!');
+
     const snakeCells = ref([{
       x: 10,
       y: 10,
@@ -34,6 +36,8 @@ export default {
     const berryInterval = 12; // * gameLoopInterval
     const gameLoopInterval = 250; // ms
 
+    let waitingToStart = true;
+
     const snakeLength = ref(1);
     let loopsSinceBerry = 0;
 
@@ -53,6 +57,12 @@ export default {
 
     const moveSnake = (event) => {
       event.preventDefault();
+      if (waitingToStart) {
+        waitingToStart = false;
+        message.value = '';
+        return;
+      }
+
       const { key } = event;
       if (key === 'ArrowDown' && velocity.y === 0) {
         velocity.x = 0;
@@ -80,10 +90,13 @@ export default {
     };
 
     const gameLost = () => {
-      alert('You lost!');
+      message.value = 'You lost! Press any key to continue!';
+      waitingToStart = true;
+      resetGame();
     };
 
     const gameLoop = () => {
+      if (waitingToStart) return;
       loopsSinceBerry += 1;
 
       if (loopsSinceBerry > berryInterval) {
@@ -133,7 +146,6 @@ export default {
       snakeCells.value.slice(1).forEach((cell) => {
         if (snakeHead.x === cell.x && snakeHead.y === cell.y) {
           gameLost();
-          resetGame();
         }
       });
     };
@@ -153,6 +165,7 @@ export default {
       snakeCells,
       berryCells,
       snakeLength,
+      message,
     };
   },
   name: 'Snake',
